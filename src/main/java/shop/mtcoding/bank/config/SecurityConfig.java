@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -30,6 +31,8 @@ public class SecurityConfig {
     // JWT 서버를 만들 예정!! Session 사용안함
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        log.debug("디버그 : filterChain 빈 등록됨");
+
         http.headers(hc -> hc.frameOptions(foc -> foc.disable())); // iframe 허용안함
         http.csrf(hscc -> hscc.disable()); // enable이면 post맨 작동안함 (메타코딩 유튜브 시큐리티 강의)
         http.cors(hscc -> hscc.configurationSource(configurationSource()));
@@ -44,8 +47,8 @@ public class SecurityConfig {
         http.httpBasic(hshbc -> hshbc.disable());
 
         http.authorizeHttpRequests(ahrc ->
-                ahrc.requestMatchers("/api/s/**").authenticated()
-                        .requestMatchers("/api/admin/**").hasRole("" + UserEnum.ADMIN) // 최근 공식문서에서는 ROLE_ 안붙여도 됨
+                ahrc.requestMatchers(new AntPathRequestMatcher("/api/s/**")).authenticated()
+                        .requestMatchers(new AntPathRequestMatcher("/api/admin/**")).hasRole("" + UserEnum.ADMIN) // 최근 공식문서에서는 ROLE_ 안붙여도 됨
                         .anyRequest().permitAll()
         );
 
@@ -53,6 +56,8 @@ public class SecurityConfig {
     }
 
     private CorsConfigurationSource configurationSource() {
+        log.debug("디버그 : configurationSource cors 설정이 SecurityFilterChain에 등록됨");
+
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");// GET, POST, PUT, DELETE (Javascript 요청 허용)
