@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -45,6 +46,13 @@ public class SecurityConfig {
 
         // httpBasic은 브라우저가 팝업창을 이용해서 사용자 인증을 진행한다
         http.httpBasic(hshbc -> hshbc.disable());
+
+        // Exception 가로채기
+        http.exceptionHandling(hsehc -> hsehc.authenticationEntryPoint((request, response, authException) -> {
+//            response.setContentType("application/json; charset=utf-8");
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            response.getWriter().println("error"); // 예쁘게 미시지를 포장하는 공통적인 응답 DTO를 만들어보자!!
+        }));
 
         http.authorizeHttpRequests(ahrc ->
                 ahrc.requestMatchers(new AntPathRequestMatcher("/api/s/**")).authenticated()
