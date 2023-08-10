@@ -1,5 +1,6 @@
 package shop.mtcoding.bank.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import shop.mtcoding.bank.domain.user.UserEnum;
+import shop.mtcoding.bank.dto.ResponseDto;
+import shop.mtcoding.bank.util.CustomResponseUtil;
 
 //@Slf4j // JUnit 테스트 할때 문제가 생겨서 어노테이션으로 사용하지 않음
 @Configuration
@@ -49,9 +52,7 @@ public class SecurityConfig {
 
         // Exception 가로채기
         http.exceptionHandling(hsehc -> hsehc.authenticationEntryPoint((request, response, authException) -> {
-//            response.setContentType("application/json; charset=utf-8");
-            response.setStatus(HttpStatus.FORBIDDEN.value());
-            response.getWriter().println("error"); // 예쁘게 미시지를 포장하는 공통적인 응답 DTO를 만들어보자!!
+            CustomResponseUtil.unAuthentication(response, "로그인을 진행해 주세요");
         }));
 
         http.authorizeHttpRequests(ahrc ->

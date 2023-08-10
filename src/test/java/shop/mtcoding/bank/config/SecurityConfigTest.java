@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 class SecurityConfigTest {
 
-    // 가짜 환경에 등록된 MockMvc를 DI함
+    // 가짜 환경에 등록된 
     @Autowired
     private MockMvc mvc;
 
