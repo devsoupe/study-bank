@@ -3,6 +3,7 @@ package shop.mtcoding.bank.service;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -40,6 +41,9 @@ public class UserService {
         return new JoinRespDto(userPS);
     }
 
+    @ToString
+    @Getter
+    @Setter
     public static class JoinRespDto {
         private Long id;
         private String username;
