@@ -1,24 +1,38 @@
 package shop.mtcoding.bank.dto.user;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import shop.mtcoding.bank.domain.user.User;
+import shop.mtcoding.bank.domain.user.UserEnum;
 
 public class UserReqDto {
 
-    @ToString
     @Getter
     @Setter
-    public static class JoinRespDto {
-        private Long id;
+    public static class JoinReqDto {
+
+        @NotEmpty
         private String username;
+
+        @NotEmpty
+        private String password;
+
+        @NotEmpty
+        private String email;
+
+        @NotEmpty
         private String fullname;
 
-        public JoinRespDto(User user) {
-            this.id = user.getId();
-            this.username = user.getUsername();
-            this.fullname = user.getFullname();
+        public User toEntity(BCryptPasswordEncoder passwordEncoder) {
+            return User.builder()
+                    .username(username)
+                    .password(passwordEncoder.encode(password))
+                    .email(email)
+                    .fullname(fullname)
+                    .role(UserEnum.CUSTOMER)
+                    .build();
         }
     }
 }
